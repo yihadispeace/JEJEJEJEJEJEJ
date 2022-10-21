@@ -11,13 +11,14 @@ public class Player_movement : MonoBehaviour
     public float jumpforce = 5f;
     public float dirx;
     public bool tocaSuelo;
-    
+    public Transform trans;
 
     private void Awake()
     {
         
         rBody = GetComponent<Rigidbody2D>();
         animatronix = GetComponent<Animator>();
+        trans = GetComponent<Transform>();
 
     }
 
@@ -25,7 +26,7 @@ public class Player_movement : MonoBehaviour
     private void FixedUpdate() {
 
         //la velocidad del Rigidbody es un vector que en el eje X, mueves en horizontal dependiendo de la velocidad(multiplica)
-        rBody.velocity = new Vector2 (horizontal * speed, 0f);    
+        rBody.velocity = new Vector2 (dirx * speed, rBody.velocity.y);    
 
     }
  
@@ -42,13 +43,13 @@ public class Player_movement : MonoBehaviour
          if(dirx == -1)
         {
             //renderer.flipX = true;
-            transform.rotation = Quaternion.Euler(0,180,0);
+            trans.rotation = Quaternion.Euler(0,180,0);
             animatronix.SetBool("Running", true);
         }
         else if(dirx == 1)
         {
             //renderer.flipX = false;
-            transform.rotation = Quaternion.Euler(0,0,0);
+            trans.rotation = Quaternion.Euler(0,0,0);
             animatronix.SetBool("Running", true);
         }
         else
