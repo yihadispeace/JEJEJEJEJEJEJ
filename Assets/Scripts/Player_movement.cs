@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Player_movement : MonoBehaviour
 {
-    private  Rigidbody2D rb;
+    private  Rigidbody2D rBody;
     public float speed = 5.5f;
     private float horizontal;
+    public Animator animatronix;
+    public float jumpforce = 5f;
+    public float dirx;
+    public bool tocaSuelo;
+    
 
-    private void Awake() {
+    private void Awake()
+    {
         
-        rb = GetComponent<Rigidbody2D>();
+        rBody = GetComponent<Rigidbody2D>();
+        animatronix = GetComponent<Animator>();
 
     }
 
@@ -18,19 +25,44 @@ public class Player_movement : MonoBehaviour
     private void FixedUpdate() {
 
         //la velocidad del Rigidbody es un vector que en el eje X, mueves en horizontal dependiendo de la velocidad(multiplica)
-        rb.velocity = new Vector2 (horizontal * speed, 0f);    
+        rBody.velocity = new Vector2 (horizontal * speed, 0f);    
 
     }
  
     //Update is called once per frame
     void Update()
     {
+        
+         dirx = Input.GetAxisRaw("Horizontal");
+        
+        Debug.Log(dirx);
 
-        horizontal = Input.GetAxisRaw("Horizontal");
+       /* transform.position += new Vector3(dirx, 0, 0) * speed * Time.deltaTime;*/
 
-        //playerTransform.position += new Vector3 (1, 0, 0) * horizontal * speed * Time.deltaTime;
+         if(dirx == -1)
+        {
+            //renderer.flipX = true;
+            transform.rotation = Quaternion.Euler(0,180,0);
+            animatronix.SetBool("Running", true);
+        }
+        else if(dirx == 1)
+        {
+            //renderer.flipX = false;
+            transform.rotation = Quaternion.Euler(0,0,0);
+            animatronix.SetBool("Running", true);
+        }
+        else
+        {
+            animatronix.SetBool("Running", false);
+        }
+        
+        if(Input.GetButtonDown("Jump") && tocaSuelo) 
+        {
 
-        //playerTransform.Translate(Vector3.right * horizontal * speed * Time.deltaTime, Space.World);
+            rBody.AddForce(Vector2.up * jumpforce, ForceMode2D.Impulse); 
+            animatronix.SetBool("Salto", true);
+
+        }
         
     }
 }
